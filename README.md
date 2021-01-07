@@ -1,0 +1,2 @@
+# SpeedConjugator
+Practice French conjugation
