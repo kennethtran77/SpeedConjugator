@@ -1,15 +1,14 @@
-body {
-  background-color: #f6f9fd;
-}
-
 .row {
   display: flex;
+  height: 100vh;
 }
 
 .left {
-  flex: 35%;
+  flex: 25%;
+  height: 100vh;
 }
 
 .right {
-  flex: 65%;
+  flex: 75%;
+  height: 100vh;
 }
