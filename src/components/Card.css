@@ -1,0 +1,18 @@
+#card {
+    width: 600px;
+    height: 300px;
+    margin: auto;
+    position:fixed;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    background-color: #deecff;
+    padding: 15px;
+    -webkit-box-shadow: 4px 4px 0px -1px #000000; 
+    box-shadow: 4px 4px 0px -1px #c6cfff;
+}
+
+form {
+    display: flex;
+}
