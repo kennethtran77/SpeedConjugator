@@ -5,7 +5,7 @@ import Card from './components/Card';
 
 import './App.css';
 
-import { tenses, pronouns} from './values.js';
+import { tenses } from './values.js';
 
 class App extends React.Component {
   constructor(props) {
@@ -20,6 +20,8 @@ class App extends React.Component {
           'nous': true,
           'vous': true,
           'ils/elles': true
+        }, verbs: {
+          'reflexive': true
         }
       }
     }

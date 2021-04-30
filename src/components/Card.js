@@ -7,6 +7,8 @@ import { tenses, pronouns, numbers, genders } from '../values.js';
 const FrenchVerbs = require('french-verbs');
 const Lefff = require('french-verbs-lefff/dist/conjugations.json');
 
+console.log(Lefff['avoir']);
+
 class Card extends React.Component {
     constructor(props) {
         super(props);
@@ -19,7 +21,8 @@ class Card extends React.Component {
             currentGender: '',
             currentNumber: '',
             currentTense: this.chooseRandomTense(),
-            currentVerb: ''
+            currentVerb: '',
+            currentReflexive: false
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -39,13 +42,7 @@ class Card extends React.Component {
     handleSubmit(e) {
         e.preventDefault();
 
-        let pronoun = pronouns[this.state.currentPronoun];
-
-        // Fetch the conjugation
-        let correctAnswer = FrenchVerbs.getConjugation(Lefff, this.state.currentVerb, this.state.currentTense, pronoun.index, {
-            agreeGender: this.state.currentGender,
-            agreeNumber: this.state.currentNumber
-        });
+        let correctAnswer = this.getCorrectAnswer();
 
         let userAnswer = this.state.value.toLowerCase().trim();
 
@@ -53,7 +50,7 @@ class Card extends React.Component {
         if (userAnswer === correctAnswer) {
             alert('Correct!');
         } else {
-            alert('Incorrect...');
+            alert(`Incorrect... Correct answer: ${correctAnswer}`);
         }
 
         // Update stats
@@ -67,9 +64,31 @@ class Card extends React.Component {
         this.randomize();
     }
 
+    getCorrectAnswer() {
+        let pronounObject = pronouns[this.state.currentPronoun];
+
+        let params = {
+            'aux': FrenchVerbs.alwaysAuxEtre(this.state.currentVerb) ? 'ETRE' : 'AVOIR'
+        }
+
+        // reflexive verbs must be transitive
+        let reflexive = FrenchVerbs.isTransitive(this.state.currentVerb) && this.state.currentReflexive;
+
+        if (reflexive) {
+            params['aux'] = 'ETRE';
+            params['agreeGender'] = this.state.currentGender;
+            params['agreeNumber'] = this.state.currentNumber;
+        }
+
+        // Fetch the conjugation
+        return FrenchVerbs.getConjugation(Lefff, this.state.currentVerb, this.state.currentTense, pronounObject.index, params, reflexive);
+    }
+
     randomize() {
         let newTense = this.chooseRandomTense();
         let newPronoun = this.chooseRandomPronoun(newTense);
+        let newVerb = this.chooseRandomVerb();
+        let newReflexive = this.props.getChecked('verbs', 'reflexive') ? Math.random() < 0.5 : false;
 
         // If gender or number of the new pronoun is any, then pick a random one
         let newGender = pronouns[newPronoun].gender === 'A' ? genders[Math.floor(Math.random() * genders.length)] : pronouns[newPronoun].gender;
@@ -81,13 +100,20 @@ class Card extends React.Component {
             currentGender: newGender,
             currentNumber: newNumber,
             currentTense: newTense,
-            currentVerb: this.chooseRandomVerb()
+            currentVerb: newVerb,
+            currentReflexive: newReflexive
         });
     }
 
     chooseRandomVerb() {
         let keys = Object.keys(Lefff);
-        return Lefff[keys[keys.length * Math.random() << 0]].W[0];
+        let randomKey = Lefff[keys[keys.length * Math.random() << 0]];
+
+        // Prevent selecting verbs with incomplete data
+        while (keys.some(key => key === null))
+            randomKey = Lefff[keys[keys.length * Math.random() << 0]];
+
+        return randomKey.W[0];
     }
 
     chooseRandomPronoun(tense) {
@@ -120,6 +146,7 @@ class Card extends React.Component {
                         <div id="pronoun">{ this.state.currentPronoun }</div>
                         <div id="gender"> ({ this.state.currentGender }) </div>
                         <div id="number"> ({ this.state.currentNumber }) </div>
+                        <div id="reflexive">{ this.state.currentReflexive && '(R)' }</div>
                         <input type="text" value={this.state.value} onChange={this.handleChange}></input>
                         <div id="verb">({this.state.currentVerb})</div>
                     </form>
