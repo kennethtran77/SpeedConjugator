@@ -10,9 +10,7 @@ Practice conjugating French verbs.
 ## Dependencies
 
 `
-npm install french-verbs
-
-french-verbs-lefff
+npm install french-verbs french-verbs-lefff
 `
 
 ## Technologies
