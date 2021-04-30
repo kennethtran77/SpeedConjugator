@@ -26,7 +26,7 @@ class App extends React.Component {
           'vous': true,
           'ils/elles': true
         }, verbs: {
-          'reflexive': true
+          'reflexive': false
         }
       }
     }
@@ -76,10 +76,10 @@ class App extends React.Component {
   render() {
     return (
       <div className="row">
-        <div className="left">
+        <div className="section-1">
           <Sidebar getChecked={this.getChecked} toggleChecked={this.toggleChecked} />
         </div>
-        <div className="right">
+        <div className="section-2">
           <Card getChecked={this.getChecked} getKeys={this.getKeys}/>
         </div>
       </div>

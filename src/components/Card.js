@@ -142,14 +142,16 @@ class Card extends React.Component {
                 <div id="card">
                     <h3 id='tense'>{ tenses[this.state.currentTense].displayName }</h3>
                     <form onSubmit={this.handleSubmit}>
-                        <div id="pronoun">{ this.state.currentPronoun }</div>
-                        <div id="gender"> { this.state.currentGender === 'M' ? <FontAwesomeIcon icon='mars' title='Male'/> : <FontAwesomeIcon icon='venus' title='Female' /> } </div>
-                        <div id="number"> { this.state.currentNumber === 'S' ? <FontAwesomeIcon icon='user' title='Singular' /> : <FontAwesomeIcon icon='users' title='Plural' /> } </div>
-                        <div id="reflexive">{ this.state.currentReflexive && <FontAwesomeIcon icon='sync' title='Reflexive' /> }</div>
+                        <div id="meta">
+                            <div id="pronoun">{ this.state.currentPronoun }</div>
+                            <div id="gender"> { this.state.currentGender === 'M' ? <FontAwesomeIcon icon='mars' title='Male'/> : <FontAwesomeIcon icon='venus' title='Female' /> } </div>
+                            <div id="number"> { this.state.currentNumber === 'S' ? <FontAwesomeIcon icon='user' title='Singular' /> : <FontAwesomeIcon icon='users' title='Plural' /> } </div>
+                            <div id="reflexive">{ this.state.currentReflexive && <FontAwesomeIcon icon='sync' title='Reflexive' /> }</div>
+                        </div>
                         <input type="text" value={this.state.value} onChange={this.handleChange}></input>
                         <div id="verb">({this.state.currentVerb})</div>
+                        <button type='button' id="randomize" title='Randomize' onClick={() => this.randomize()}><FontAwesomeIcon icon='random' /></button>
                     </form>
-                    <button type='button' id="randomize" title='Randomize' onClick={() => this.randomize()}><FontAwesomeIcon icon='random' /></button>
                     <div id="stats">
                         <h4><FontAwesomeIcon icon='eye' title='Seen' /> {this.state.seen}</h4>
                         <h4><FontAwesomeIcon icon='check-circle' title='Correct' /> {this.state.correct}</h4>

@@ -1,14 +1,29 @@
 .row {
-  display: flex;
-  height: 100vh;
+  width: 100%;
 }
 
-.left {
-  flex: 25%;
-  height: 100vh;
+.section-1 {
+  width: 100%;
 }
 
-.right {
-  flex: 75%;
-  height: 100vh;
+.section-2 {
+  width: 100%;
+}
+
+/*
+Responsive
+*/
+@media only screen and (min-width: 768px) {
+  .row {
+    display: flex;
+    height: 100vh;
+  }
+  
+  .section-1 {
+    width: auto;
+  }
+  
+  .section-2 {
+    width: 100%;
+  }
 }
