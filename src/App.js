@@ -1,28 +1,22 @@
 import React from 'react';
 
-import Sidebar from './components/Sidebar.js';
-import Card from './components/Card.js';
+import Sidebar from './components/Sidebar';
+import Card from './components/Card';
 
 import './App.css';
+
+import { tenses, pronouns} from './values.js';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       checked: {
-        tenses: {
-          'present': true,
-          'passe-compose': false,
-          'imparfait': false
-        },
-        moods: {
-          'imperatif': true,
-          'subjonctif': false
-        },
+        tenses: { },
         pronouns: {
           'je': true,
           'tu': true,
-          'il/elle': true,
+          'il/elle/on': true,
           'nous': true,
           'vous': true,
           'ils/elles': true
@@ -30,8 +24,12 @@ class App extends React.Component {
       }
     }
 
+    for (let tense in tenses)
+      this.state.checked['tenses'][tense] = true;
+
     this.getChecked = this.getChecked.bind(this);
     this.toggleChecked = this.toggleChecked.bind(this);
+    this.getKeys = this.getKeys.bind(this);
   }
 
   toggleChecked(category, key) {
@@ -39,17 +37,13 @@ class App extends React.Component {
     if (this.state.checked[category][key]) {
       let checkedCount = 1;
 
-      for (let k in this.state.checked[category]) {
-        if (k !== key) {
-          if (this.state.checked[category][k]) {
+      for (let k in this.state.checked[category])
+        if (k !== key)
+          if (this.state.checked[category][k])
             checkedCount += 1;
-          }
-        }
-      }
 
-      if (checkedCount === 1) {
+      if (checkedCount === 1)
         return;
-      }
     }
 
     // clone checked object
@@ -67,6 +61,12 @@ class App extends React.Component {
     return this.state.checked[category][key];
   }
 
+  // Return an array representing the keys from a category from 'checked'
+  getKeys(category, checked) {
+    let categoryObject = this.state.checked[category];
+    return checked ? Object.keys(categoryObject).filter(key => categoryObject[key]) : Object.keys(categoryObject);
+  }
+
   render() {
     return (
       <div className="row">
@@ -74,7 +74,7 @@ class App extends React.Component {
           <Sidebar getChecked={this.getChecked} toggleChecked={this.toggleChecked} />
         </div>
         <div className="right">
-          <Card getChecked={this.getChecked}/>
+          <Card getChecked={this.getChecked} getKeys={this.getKeys}/>
         </div>
       </div>
     );
