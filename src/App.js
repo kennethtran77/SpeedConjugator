@@ -7,6 +7,11 @@ import './App.css';
 
 import { tenses } from './values.js';
 
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faCheckCircle, faTimesCircle, faEye, faPercent, faUsers, faUser, faMars, faVenus, faSync, faRandom } from '@fortawesome/free-solid-svg-icons';
+
+library.add(faCheckCircle, faTimesCircle, faEye, faPercent, faUsers, faUser, faMars, faVenus, faSync, faRandom );
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -26,17 +31,16 @@ class App extends React.Component {
       }
     }
 
-    for (let tense in tenses)
-      this.state.checked['tenses'][tense] = true;
+    this.state.checked['tenses'][Object.keys(tenses)[0]] = true;
 
     this.getChecked = this.getChecked.bind(this);
     this.toggleChecked = this.toggleChecked.bind(this);
     this.getKeys = this.getKeys.bind(this);
   }
 
-  toggleChecked(category, key) {
-    // Make sure at least one checkbox is checked at all times
-    if (this.state.checked[category][key]) {
+  toggleChecked(category, key, atleastOne = true) {
+    // Make sure at least one checkbox is checked at all times for the given category
+    if (atleastOne && this.state.checked[category][key]) {
       let checkedCount = 1;
 
       for (let k in this.state.checked[category])

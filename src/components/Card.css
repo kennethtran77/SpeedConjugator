@@ -6,6 +6,7 @@
 }
 
 #card {
+    position: relative;
     width: 600px;
     height: 300px;
     background-color: #deecff;
@@ -16,4 +17,31 @@
 
 form {
     display: flex;
+    font-size: 24px;
+}
+
+form input[type='text'] {
+    width: 100%;
+    font-size: 22px;
+    font-family: 'Quicksand', 'serif';
+}
+
+form > * {
+    margin-right: 5px;
+}
+
+#stats {
+    display: flex;
+    position: absolute;
+    bottom: 0;
+}
+
+#stats > * {
+    margin-right: 25px;
+}
+
+#randomize {
+    font-size: 18px;
+    height: 30px;
+    width: 30px;
 }

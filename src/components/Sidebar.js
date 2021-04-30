@@ -28,13 +28,13 @@ class Sidebar extends React.Component {
     elementId: e.g. present-indicatif
     innerHTML: e.g. Présent Indicatif
     */
-    createTogglebox(category, value, elementId, innerHTML) {
+    createTogglebox(category, value, elementId, innerHTML, atleastOne = true) {
         return (
             <div>
                 <input
                     type="checkbox" id={elementId} value={value}
                     checked={this.props.getChecked(category, value)}
-                    onChange={() => this.props.toggleChecked(category, value)}/>
+                    onChange={() => this.props.toggleChecked(category, value, atleastOne)}/>
                 <label htmlFor={elementId}>{innerHTML}</label>
             </div>
         );

@@ -8,6 +8,7 @@ button {
     height: 75px;
     background-color: #1e3799;
     border: none;
+    font-family: 'Quicksand', 'serif';
     color: white;
 }
 
