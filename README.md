@@ -19,5 +19,5 @@ npm install french-verbs french-verbs-lefff
 
 ## Todo
 
-* Reflexive verbs
 * Select specific verbs
+* Add better styling
