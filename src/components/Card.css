@@ -27,6 +27,18 @@ form > *, #meta > * {
     margin-right: 5px;
 }
 
+.correct {
+    color: rgb(0, 105, 0);
+}
+
+.incorrect {
+    color: rgb(231, 0, 0);
+}
+
+#correct-answer {
+    font-weight: bold;
+}
+
 #stats {
     display: flex;
     position: absolute;
@@ -41,6 +53,11 @@ form > *, #meta > * {
     font-size: 18px;
     height: 30px;
     width: 30px;
+}
+
+.v-margin {
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 /*

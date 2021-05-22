@@ -5,7 +5,7 @@ import Card from './components/Card';
 
 import './App.css';
 
-import { tenses } from './values.js';
+import { tenses } from './constants.js';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCheckCircle, faTimesCircle, faEye, faPercent, faUsers, faUser, faMars, faVenus, faSync, faRandom } from '@fortawesome/free-solid-svg-icons';

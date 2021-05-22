@@ -2,7 +2,7 @@ import React from 'react';
 
 import './Card.css';
 
-import { tenses, pronouns, numbers, genders } from '../values.js';
+import { tenses, pronouns, numbers, genders } from '../constants.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const FrenchVerbs = require('french-verbs');
@@ -21,7 +21,8 @@ class Card extends React.Component {
             currentNumber: '',
             currentTense: this.chooseRandomTense(),
             currentVerb: '',
-            currentReflexive: false
+            currentReflexive: false,
+            inputState: 'waiting' // 'waiting', 'correct', 'incorrect'
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -33,33 +34,48 @@ class Card extends React.Component {
     }
 
     handleChange(e) {
-        this.setState({
-            value: e.target.value
-        })
+        if (this.state.inputState === 'waiting') {
+            this.setState({
+                value: e.target.value
+            })
+        }
     }
 
     handleSubmit(e) {
         e.preventDefault();
 
-        let correctAnswer = this.getCorrectAnswer();
+        if (this.state.inputState !== 'waiting')
+            return;
 
+        let correctAnswer = this.getCorrectAnswer();
         let userAnswer = this.state.value.toLowerCase().trim();
 
-        // TODO - better answer checker
+        let delay = 1000;
+        
         if (userAnswer === correctAnswer) {
-            alert('Correct!');
+            this.setState({
+                inputState: 'correct',
+                correct: this.state.correct + 1
+            });
         } else {
-            alert(`Incorrect... Correct answer: ${correctAnswer}`);
+            this.setState({
+                inputState: 'incorrect',
+                incorrect: this.state.incorrect + 1
+            });
+            delay = 3000;
         }
 
-        // Update stats
-        this.setState({
-            correct: userAnswer === correctAnswer ? this.state.correct + 1 : this.state.correct,
-            incorrect: userAnswer === correctAnswer ? this.state.incorrect : this.state.incorrect + 1
-        });
+        // Two second delay
+        setTimeout(function() {
+            // Update stats
+            this.setState({
+                inputState: 'waiting'
+            });
 
-        // Randomize the card
-        this.randomize();
+            // Randomize the card
+            this.randomize();
+        }.bind(this),
+        delay);
     }
 
     getCorrectAnswer() {
@@ -137,6 +153,14 @@ class Card extends React.Component {
     }
 
     render() {
+        let ratio = 0;
+
+        if (this.state.correct === 0 & this.state.incorrect === 0) {
+            ratio = 0;
+        } else {
+            ratio = Math.round((this.state.correct / this.state.incorrect) * 100) / 100;
+        }
+
         return (
             <div id="card-root">
                 <div id="card">
@@ -148,15 +172,28 @@ class Card extends React.Component {
                             <div id="number"> { this.state.currentNumber === 'S' ? <FontAwesomeIcon icon='user' title='Singular' /> : <FontAwesomeIcon icon='users' title='Plural' /> } </div>
                             <div id="reflexive">{ this.state.currentReflexive && <FontAwesomeIcon icon='sync' title='Reflexive' /> }</div>
                         </div>
-                        <input type="text" value={this.state.value} onChange={this.handleChange}></input>
+                        <input
+                            id="input"
+                            type="text"
+                            value={this.state.value}
+                            onChange={this.handleChange}
+                            className={this.state.inputState}
+                            autoComplete="off">
+                        </input>
                         <div id="verb">({this.state.currentVerb})</div>
                         <button type='button' id="randomize" title='Randomize' onClick={() => this.randomize()}><FontAwesomeIcon icon='random' /></button>
                     </form>
+                    { this.state.inputState === 'incorrect' && 
+                    <div className="v-margin">
+                        Correct answer:
+                        <span id="correct-answer"> {this.getCorrectAnswer()}</span>
+                    </div>
+                    }
                     <div id="stats">
                         <h4><FontAwesomeIcon icon='eye' title='Seen' /> {this.state.seen}</h4>
                         <h4><FontAwesomeIcon icon='check-circle' title='Correct' /> {this.state.correct}</h4>
                         <h4><FontAwesomeIcon icon='times-circle' title='Incorrect' /> {this.state.incorrect}</h4>
-                        <h4><FontAwesomeIcon icon='percent' title='Correct/Incorrect Ratio' /> {Math.round((this.state.correct / this.state.incorrect) * 100) / 100}</h4>
+                        <h4><FontAwesomeIcon icon='percent' title='Correct/Incorrect Ratio' /> {ratio}</h4>
                     </div>
                 </div>
             </div>
