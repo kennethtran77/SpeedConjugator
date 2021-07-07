@@ -13,7 +13,6 @@
     "@testing-library/user-event": "^12.8.3",
     "french-verbs": "^4.0.0",
     "french-verbs-lefff": "^2.0.0",
-    "gh-pages": "^3.2.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
@@ -24,7 +23,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-	"predeploy": "yarn build",
+	"predeploy": "npm run build",
 	"deploy": "gh-pages -d build"
   },
   "eslintConfig": {
@@ -44,5 +43,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "gh-pages": "^3.2.3"
   }
 }
