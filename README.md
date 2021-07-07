@@ -7,10 +7,6 @@ Practice conjugating French verbs.
 * Select tenses to conjugate
 * Select pronouns to conjugate 
 
-## Screenshots
-
-![Wrong Answer User Story](https://i.ibb.co/RpGbb9M/wrong-answer.png)
-
 ## Dependencies
 
 `
