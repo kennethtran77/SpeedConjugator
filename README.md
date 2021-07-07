@@ -23,6 +23,5 @@ npm install french-verbs french-verbs-lefff
 
 ## Todo
 
-* Implement selecting specific verbs
 * Add better styling
 * Fix imperative conjugation bug
