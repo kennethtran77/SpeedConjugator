@@ -2,6 +2,7 @@
   "name": "speed-conjugator",
   "version": "0.1.0",
   "private": true,
+  "build": "react-scripts --max_old_space_size=4096 build",
   "homepage": "https://kennethtran77.github.io/SpeedConjugator/",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
