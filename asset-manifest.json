@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/SpeedConjugator/static/css/main.a890306f.chunk.css",
+    "main.js": "/SpeedConjugator/static/js/main.feee3d5c.chunk.js",
+    "main.js.map": "/SpeedConjugator/static/js/main.feee3d5c.chunk.js.map",
+    "runtime-main.js": "/SpeedConjugator/static/js/runtime-main.457c14ba.js",
+    "runtime-main.js.map": "/SpeedConjugator/static/js/runtime-main.457c14ba.js.map",
+    "static/js/2.35c5dd72.chunk.js": "/SpeedConjugator/static/js/2.35c5dd72.chunk.js",
+    "static/js/2.35c5dd72.chunk.js.map": "/SpeedConjugator/static/js/2.35c5dd72.chunk.js.map",
+    "index.html": "/SpeedConjugator/index.html",
+    "static/css/main.a890306f.chunk.css.map": "/SpeedConjugator/static/css/main.a890306f.chunk.css.map",
+    "static/js/2.35c5dd72.chunk.js.LICENSE.txt": "/SpeedConjugator/static/js/2.35c5dd72.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.457c14ba.js",
+    "static/js/2.35c5dd72.chunk.js",
+    "static/css/main.a890306f.chunk.css",
+    "static/js/main.feee3d5c.chunk.js"
+  ]
+}
