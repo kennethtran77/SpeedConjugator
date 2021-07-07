@@ -69,6 +69,7 @@ class App extends React.Component {
     this.setState({ checked: newChecked });
   }
 
+  // Return whether the key within the given category is checked
   getChecked(category, key) {
     return this.state.checked[category][key];
   }
