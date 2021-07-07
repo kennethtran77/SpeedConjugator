@@ -8,6 +8,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 const FrenchVerbs = require('french-verbs');
 const Lefff = require('french-verbs-lefff/dist/conjugations.json');
 
+const verbs = Object.keys(Lefff);
+
 class Card extends React.Component {
     constructor(props) {
         super(props);
@@ -29,10 +31,12 @@ class Card extends React.Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
+    // Randomize the card upon component mounting
     componentDidMount() {
         this.randomize();
     }
 
+    // Handle changes to the text input
     handleChange(e) {
         if (this.state.inputState === 'waiting') {
             this.setState({
@@ -41,14 +45,24 @@ class Card extends React.Component {
         }
     }
 
+    // Handle submit
     handleSubmit(e) {
         e.preventDefault();
 
+        // Do nothing if the input state is in 'waiting' mode
         if (this.state.inputState !== 'waiting')
             return;
 
+        // Fetch the correct answer and user's answer
         let correctAnswer = this.getCorrectAnswer();
         let userAnswer = this.state.value.toLowerCase().trim();
+
+        // Check if accents are to be ignored
+        if (this.props.getChecked('verbs', 'ignore-accents')) {
+            // Strip answers of accents
+            correctAnswer = correctAnswer.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+            userAnswer = userAnswer.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+        }
 
         let delay = 1000;
         
@@ -78,6 +92,7 @@ class Card extends React.Component {
         delay);
     }
 
+    // Return the correct answer given the current card state
     getCorrectAnswer() {
         let pronounObject = pronouns[this.state.currentPronoun];
 
@@ -98,11 +113,12 @@ class Card extends React.Component {
         return FrenchVerbs.getConjugation(Lefff, this.state.currentVerb, this.state.currentTense, pronounObject.index, params, reflexive);
     }
 
+    // Randomize the card by choosing a new tense, pronoun, verb, and reflexiveness
     randomize() {
         let newTense = this.chooseRandomTense();
         let newPronoun = this.chooseRandomPronoun(newTense);
         let newVerb = this.chooseRandomVerb();
-        let newReflexive = this.props.getChecked('verbs', 'reflexive') && FrenchVerbs.isTransitive(newVerb) ? Math.random() < 0.5 : false;
+        let newReflexive = this.props.getChecked('verbs', 'reflexive') && FrenchVerbs.isTransitive(newVerb) && newTense !== 'IMPERATIF_PRESENT';
 
         // If gender or number of the new pronoun is `any`, then pick a random one
         let newGender = pronouns[newPronoun].gender === 'A' ? genders[Math.floor(Math.random() * genders.length)] : pronouns[newPronoun].gender;
@@ -120,24 +136,35 @@ class Card extends React.Component {
         });
     }
 
+    // Generate a random verb. If the user inputted verb list is not empty, pick from there.
+    // Otherwise, pick from the database
     chooseRandomVerb() {
-        let keys = Object.keys(Lefff);
-        let randomKey = Lefff[keys[keys.length * Math.random() << 0]];
+        const verbList = this.props.getVerbList();
 
-        // Prevent selecting verbs with incomplete data
-        while (Object.keys(keys).some(key => keys[key] === null))
-            randomKey = Lefff[keys[keys.length * Math.random() << 0]];
+        // Choose a random verb from the whole database if the verb list is empty
+        if (verbList.length <= 0) {
+            let randomKey = Lefff[verbs[verbs.length * Math.random() << 0]];
 
-        return randomKey.W[0];
+            // Prevent selecting verbs with incomplete data
+            while (verbs.some(key => verbs[key] === null))
+                randomKey = Lefff[verbs[verbs.length * Math.random() << 0]];
+    
+            return randomKey.W[0];
+        } else {
+            // Choose a random verb from the user inputted verb list
+            let randomKey = verbList[Math.floor(Math.random() * verbList.length)];
+            return randomKey;
+        }
     }
 
     chooseRandomPronoun(tense) {
         // Impératif only allows for 'tu' or 'vous'
         let choices = tense === 'IMPERATIF_PRESENT' ? ['tu', 'vous'] : this.props.getKeys('pronouns', true);
 
+        // Select pronoun
         let pronoun = choices[Math.floor(Math.random() * choices.length)];
 
-        // Pick between il/elle or ils/elles
+        // Pick between il/elle/on or ils/elles
         if (pronoun === 'il/elle/on')
             return ['il', 'elle', 'on'][Math.floor(Math.random() * 3)];
         else if (pronoun === 'ils/elles')
@@ -152,7 +179,7 @@ class Card extends React.Component {
         return tenses[randomIndex];
     }
 
-    render() {
+    calculateRatio() {
         let ratio = 0;
 
         if (this.state.correct === 0 & this.state.incorrect === 0) {
@@ -161,6 +188,10 @@ class Card extends React.Component {
             ratio = Math.round((this.state.correct / this.state.incorrect) * 100) / 100;
         }
 
+        return ratio;
+    }
+
+    render() {
         return (
             <div id="card-root">
                 <div id="card">
@@ -181,7 +212,14 @@ class Card extends React.Component {
                             autoComplete="off">
                         </input>
                         <div id="verb">({this.state.currentVerb})</div>
-                        <button type='button' id="randomize" title='Randomize' onClick={() => this.randomize()}><FontAwesomeIcon icon='random' /></button>
+                        <button
+                            type='button'
+                            id="randomize"
+                            title='Randomize'
+                            onClick={() => this.randomize()}
+                            disabled={this.state.inputState !== 'waiting'} >
+                        <FontAwesomeIcon icon='random' />
+                        </button>
                     </form>
                     { this.state.inputState === 'incorrect' && 
                     <div className="v-margin">
@@ -193,7 +231,7 @@ class Card extends React.Component {
                         <h4><FontAwesomeIcon icon='eye' title='Seen' /> {this.state.seen}</h4>
                         <h4><FontAwesomeIcon icon='check-circle' title='Correct' /> {this.state.correct}</h4>
                         <h4><FontAwesomeIcon icon='times-circle' title='Incorrect' /> {this.state.incorrect}</h4>
-                        <h4><FontAwesomeIcon icon='percent' title='Correct/Incorrect Ratio' /> {ratio}</h4>
+                        <h4><FontAwesomeIcon icon='percent' title='Correct/Incorrect Ratio' /> {this.calculateRatio()}</h4>
                     </div>
                 </div>
             </div>

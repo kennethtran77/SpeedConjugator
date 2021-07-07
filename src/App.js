@@ -25,17 +25,25 @@ class App extends React.Component {
           'nous': true,
           'vous': true,
           'ils/elles': true
-        }, verbs: {
-          'reflexive': false
+        },
+        verbs: {
+          'reflexive': false,
+          'ignore-accents': false,
         }
-      }
+      },
+      verbList: []
     }
 
     this.state.checked['tenses'][Object.keys(tenses)[0]] = true;
 
+    // Bind functions
     this.getChecked = this.getChecked.bind(this);
     this.toggleChecked = this.toggleChecked.bind(this);
     this.getKeys = this.getKeys.bind(this);
+
+    this.getVerbList = this.getVerbList.bind(this);
+    this.addToVerbList = this.addToVerbList.bind(this);
+    this.removeFromVerbList = this.removeFromVerbList.bind(this);
   }
 
   toggleChecked(category, key, atleastOne = true) {
@@ -58,9 +66,7 @@ class App extends React.Component {
     // Mutate array nested in the new checked object
     newChecked[category][key] = !newChecked[category][key];
 
-    this.setState({
-      checked: newChecked
-    });
+    this.setState({ checked: newChecked });
   }
 
   getChecked(category, key) {
@@ -73,14 +79,41 @@ class App extends React.Component {
     return checked ? Object.keys(categoryObject).filter(key => categoryObject[key]) : Object.keys(categoryObject);
   }
 
+  // Add a verb to the verb list
+  addToVerbList(verb) {
+    const newVerbs = [ ...this.state.verbList, verb ];
+    this.setState({ verbList: newVerbs });
+  }
+
+  // Remove a verb from the verb list
+  removeFromVerbList(verb) {
+    const newVerbs = this.state.verbList.filter(e => e !== verb);
+    this.setState({ verbList: newVerbs });
+  }
+
+  // Return the array of verblist
+  getVerbList() {
+    return this.state.verbList.slice();
+  }
+
   render() {
     return (
       <div className="row">
         <div className="section-1">
-          <Sidebar getChecked={this.getChecked} toggleChecked={this.toggleChecked} />
+          <Sidebar
+            getChecked={this.getChecked}
+            toggleChecked={this.toggleChecked}
+            addToVerbList={this.addToVerbList}
+            removeFromVerbList={this.removeFromVerbList}
+            getVerbList={this.getVerbList}
+          />
         </div>
         <div className="section-2">
-          <Card getChecked={this.getChecked} getKeys={this.getKeys}/>
+          <Card
+            getChecked={this.getChecked}
+            getKeys={this.getKeys}
+            getVerbList={this.getVerbList} 
+          />
         </div>
       </div>
     );

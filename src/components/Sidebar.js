@@ -17,24 +17,29 @@ class Sidebar extends React.Component {
     }
 
     updateDropdown(newDropdown) {
-        this.setState({
-            currentDropdown: this.state.currentDropdown === newDropdown ? '' : newDropdown
-        });
+        this.setState({ currentDropdown: this.state.currentDropdown === newDropdown ? '' : newDropdown });
     }
 
     /*
-    category: e.g. tense, pronoun
-    value: e.g. PRESENT, IMPARFAIT
-    elementId: e.g. present-indicatif
-    innerHTML: e.g. Présent Indicatif
+    Return a togglebox to control keys within App.state.checked.
+
+    category: The category of this togglebox.
+        e.g. tense, pronoun, verb
+    key: The keyname of this togglebox. Should correspond to a key in App.state.checked.
+        e.g. PRESENT, IMPARFAIT, reflexive
+    elementId: The HTML element ID for this togglebox.
+        e.g. present-indicatif
+    innerHTML: The displayname for this togglebox.
+        e.g. Présent Indicatif
+    atleastOne: Require whether or not at least one togglebox of this category must be activated at all times.
     */
-    createTogglebox(category, value, elementId, innerHTML, atleastOne = true) {
+    createTogglebox(category, key, elementId, innerHTML, atleastOne = true) {
         return (
             <div>
                 <input
-                    type="checkbox" id={elementId} value={value}
-                    checked={this.props.getChecked(category, value)}
-                    onChange={() => this.props.toggleChecked(category, value, atleastOne)}/>
+                    type="checkbox" id={elementId} value={key}
+                    checked={this.props.getChecked(category, key)}
+                    onChange={() => this.props.toggleChecked(category, key, atleastOne)}/>
                 <label htmlFor={elementId}>{innerHTML}</label>
             </div>
         );
@@ -48,11 +53,20 @@ class Sidebar extends React.Component {
                     <button onClick={() => this.updateDropdown('tenses')}>Tenses</button>
                     <button onClick={() => this.updateDropdown('verbs')}>Verbs</button>
                 </div>
-                { this.state.currentDropdown === 'pronouns' && <Pronouns createTogglebox={this.createTogglebox} />}
-                { this.state.currentDropdown === 'tenses' && <Tenses createTogglebox={this.createTogglebox} /> }
-                { this.state.currentDropdown === 'verbs' && <Verbs createTogglebox={this.createTogglebox} /> }
-                {/* { this.state.currentDropdown === 'pronouns' && <Pronouns getChecked={this.props.getChecked} toggleChecked={this.props.toggleChecked} />}
-                { this.state.currentDropdown === 'tenses' && <Tenses getChecked={this.props.getChecked} toggleChecked={this.props.toggleChecked} /> } */}
+                { this.state.currentDropdown === 'pronouns' &&
+                    <Pronouns createTogglebox={this.createTogglebox}
+                />}
+                { this.state.currentDropdown === 'tenses' &&
+                    <Tenses createTogglebox={this.createTogglebox} 
+                />}
+                { this.state.currentDropdown === 'verbs' &&
+                    <Verbs
+                        createTogglebox={this.createTogglebox}
+                        addToVerbList={this.props.addToVerbList}
+                        removeFromVerbList={this.props.removeFromVerbList}
+                        getVerbList={this.props.getVerbList}
+                    />
+                }
             </div>
         )
     }
