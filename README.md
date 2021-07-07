@@ -2,6 +2,8 @@
 
 Practice conjugating French verbs.
 
+Try it out at: https://kennethtran77.github.io/SpeedConjugator/
+
 ## Features
 
 * Select tenses to conjugate
